@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.hboard.board.dao.IBoardRepository">
+
+ <resultMap id="boardMap" type="com.app.hboard.board.model.Board">
+ <result property="boardNum" column="BOARD_ID" />
+ <result property="title" column="BOARD_TITLE" />
+  <result property="boardContent" column="BOARD_CONTENT" />
+   <result property="writer" column="BOARD_WRITER" />
+ </resultMap>
+
+
+<select id="selectArticleList" parameterType="map" resultMap="boardMap">
+ SELECT * FROM HBOARD WHERE BOARD_ID BETWEEN #{start} AND #{end}
+ </select>
+	
+	<insert id="insertArticle" parameterType="com.app.hboard.board.model.Board">
+ <![CDATA[
+ INSERT INTO
+ HBOARD
+ (BOARD_ID, BOARD_TITLE, BOARD_CONTENT, BOARD_WRITER)
+ VALUES
+ (#{boardNum}, #{title}, #{boardContent}, #{writer} )
+ ]]>
+ </insert>
+ 
+ 
+ <select id="getArticle"  parameterType="int" resultType="com.app.hboard.board.model.Board">
+ <![CDATA[
+  SELECT
+  BOARD_ID AS "boardNum",
+  BOARD_TITLE AS "title",
+  BOARD_CONTENT AS "boardContent",
+  BOARD_WRITER AS "writer"
+  FROM
+  HBOARD
+  WHERE BOARD_ID=#{boardNum}
+  
+  
+ ]]>
+ </select>
+ 
+ 
+ 
+ <update id="updateArticle" parameterType="com.app.hboard.board.model.Board">
+ <![CDATA[
+ UPDATE
+ HBOARD
+ SET
+  BOARD_WRITER=#{writer},
+ BOARD_TITLE=#{title}, BOARD_CONTENT=#{boardContent}
+WHERE
+ BOARD_ID=#{boardNum}
+ ]]>
+ </update>
+ 
+ <select id="selectMaxArticleNo" parameterType="int" resultType="int">
+ <![CDATA[
+SELECT
+ NVL(MAX(BOARD_ID),0) AS "boardNum"
+FROM HBOARD
+ ]]>
+ </select>
+ 
+  <select id="deleteArticle" parameterType="int" >
+
+DELETE FROM
+HBOARD
+WHERE
+BOARD_ID=#{boardNum}
+
+ 
+ </select>
+ 
+ 
+ 
+ 
+  <select id="getAtricleCount" parameterType="int" resultType="int">
+ <![CDATA[
+SELECT
+ COUNT(*)
+FROM HBOARD
+ ]]>
+ </select>
+ 
+ 
+
+
+	
+</mapper>
