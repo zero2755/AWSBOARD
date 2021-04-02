@@ -2,6 +2,8 @@ package com.app.hboard.board.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import com.app.hboard.board.model.Board;
 import com.app.hboard.board.service.IBoardService;
@@ -20,6 +23,9 @@ public class BoardController {
 	
 	@Autowired
 	IBoardService boardService;
+	
+	private static Logger logger = LoggerFactory.getLogger(BoardController.class);
+	
 	
 	//web.xml hboard가아니라 myboard로 해놓음 
 	@RequestMapping("/hihome")
@@ -91,6 +97,17 @@ public class BoardController {
 	
 	//delete
 	
+	/*
+	@RequestMapping(value="/deleteBoard/{boardNum}", method=RequestMethod.GET)
+	public String deleteBoard(@PathVariable int boardNum) {
+		
+		boardService.deleteArticle(boardNum);
+		
+		return "redirect:/getlist?page=1";
+	}
+	*/
+	
+	
 	@RequestMapping(value="/deleteBoard/{boardNum}", method=RequestMethod.GET)
 	public String deleteBoard(@PathVariable int boardNum) {
 		
@@ -105,7 +122,7 @@ public class BoardController {
 	@RequestMapping("/getlist")
 	public String getAllEmp(Model model,int page)
 	{	
-		
+	logger.info("getList호출..........");
 	System.out.println("getlist");
 		
 	System.out.println(page);
