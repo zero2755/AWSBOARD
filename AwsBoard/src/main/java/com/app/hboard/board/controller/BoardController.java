@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
+import com.app.hboard.board.PageHandler;
 import com.app.hboard.board.model.Board;
 import com.app.hboard.board.service.IBoardService;
 
@@ -23,6 +23,10 @@ public class BoardController {
 	
 	@Autowired
 	IBoardService boardService;
+	
+	@Autowired
+	PageHandler pageHandler;
+	
 	
 	private static Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
@@ -123,16 +127,50 @@ public class BoardController {
 	public String getAllEmp(Model model,int page)
 	{	
 	logger.info("getList호출..........");
-	System.out.println("getlist");
+	//System.out.println("getlist");
 		
-	System.out.println(page);
+	//System.out.println(page);
 		
 		model.addAttribute("List", boardService.selectArticleList(page));
 		
 		int boardCount=boardService.getArticleCount();
 		int totalPage=(int)(boardCount)/10+1;
-		model.addAttribute("totalPage", totalPage);
 		
+		
+		pageHandler.setCurPage(page);
+		pageHandler.setTotalBoardCount(boardService.getArticleCount());
+		pageHandler.calcData();
+		
+		System.out.println("요청페이지 : "+page);
+		System.out.println("현제페이지 : "+pageHandler.getCurPage());
+		
+		System.out.println("pageHandler.startPage : "+pageHandler.getStartPage());
+		System.out.println("pageHandler.endPage : "+pageHandler.getEndPage());
+		/* 
+		 * 
+		 * pageHandler 기존페이징처리
+		 * 
+	 		<!--  
+			<table border="1">
+				
+						 
+				<c:forEach begin="1" end="${pageHandler.totalPage }" varStatus="num">
+				
+					<td><a href="<c:url value='/getlist?page=${num.count}'/>">페이지${num.count}보기</a></td>
+				</c:forEach>
+				
+				
+			</table>
+			 -->
+			
+			
+			<td><a href="<c:url value='/getlist?page=${num.count}'/>">페이지${num.count}보기</a></td>
+		 * 
+		 */
+		
+		
+		model.addAttribute("pageHandler", pageHandler);
+		model.addAttribute("pageHandler", pageHandler);
 		
 		return "getlist";
 	}

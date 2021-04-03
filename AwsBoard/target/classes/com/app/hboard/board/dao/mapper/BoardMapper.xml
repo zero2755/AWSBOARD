@@ -13,7 +13,21 @@
 
 
 <select id="selectArticleList" parameterType="map" resultMap="boardMap">
- SELECT * FROM HBOARD WHERE BOARD_ID BETWEEN #{start} AND #{end}
+<!-- 
+SELECT * FROM 
+ 	(SELECT * FROM HBOARD ORDER BY BOARD_ID)
+ WHERE ROWNUM BETWEEN #{start} AND #{end}
+ 
+ -->  
+ SELECT * FROM
+  	  (
+        SELECT ROW_NUMBER() OVER (ORDER BY BOARD_ID) NUM
+             , A.*
+          FROM HBOARD A
+         ORDER BY BOARD_ID
+        ) 
+ WHERE NUM BETWEEN #{start} AND #{end}
+ 
  </select>
 	
 	<insert id="insertArticle" parameterType="com.app.hboard.board.model.Board">
